@@ -37,6 +37,30 @@ def driver():
      plt.show()
      return 
      
+
+def RK4(a,b,h,ya):
+
+     N = int((b-a)/h)
+     
+     yapp = np.zeros(N+1)
+     t = np.zeros(N+1)
+     
+     yapp[0] = ya
+     t[0] = a
+
+     for jj in range(1, N+1):
+        tj = a+(jj-1)*h
+        t[jj] = tj+h
+        rk = yapp[jj-1]
+        k1 = h*eval_f(tj,rk)
+        k2= h*eval_f(tj+h/2,rk+0.5*k1)
+        k3 = h*eval_f(tj+h/2,rk+1/2*k2)
+        k4 = h*eval_f(tj+h,rk+k3)
+        yapp[jj] = rk + 1/6*(k1+2*k2+2*k3+k4)
+
+     return (yapp,t)
+
+
 def explicit_euler(a,b,h,ya):
 
      N = int((b-a)/h)
@@ -56,12 +80,17 @@ def explicit_euler(a,b,h,ya):
      return (yapp[-1],t[-1])
 
      
-def  eval_f(t,u1, u2):
-
-     u2p = 3*u2 -2*u1 + 6*np.exp(-t)
-     u1p = u2
-
-     return u2p, u1p     
+def eval_f(t,y):
+#     evaluate f(t,y)
+     
+     f = y**2/(1+t)
+     return f
+     
+def eval_ft(t,y):
+#      evaluate the total derivative of f
+     
+     ft = -y/(t**2)+1/t*(1+y/t)
+     return ft
      
 driver()                    
      

@@ -29,9 +29,11 @@ def FEM_solve(a, b, N):
     A = A_mat(N)
     b = b_vec(N)
 
-    sol = sp.linalg.spsolve(A, b)
-
-    return [xh, sol]
+    alpha = sp.linalg.spsolve(A, b)
+    sol = evalBasis(alpha, N, xh[1:N+1])
+    yapp=np.zeros(len(xh))
+    yapp[1:N+1]=sol
+    return [xh, yapp]
 
 def A_mat(N):
     main_diag = np.zeros(N)
@@ -63,6 +65,12 @@ def b_vec(N):
         b[i-1] = -(np.sqrt(2)/(i*np.pi))*(((-1)**i)-1)
 
     return b
+
+def evalBasis(alpha,N,x):
+    sol=np.zeros(N)
+    for i in range(N):
+        sol+=alpha[i]*np.sqrt(2)*np.sin((i+1)*np.pi*x)
+    return sol
 main()
 
 ## PROBLEM 2
